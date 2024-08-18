@@ -1,0 +1,105 @@
+{
+  "wallet": {
+    "addressKeyName": "Allora",
+    "addressRestoreMnemonic": "romance october wisdom stuff bomb recycle uncle clown because recipe behind execute",
+    "alloraHomeDir": "",
+    "gas": "1000000",
+    "gasAdjustment": 1,
+    "nodeRpc": "https://beta.multi-rpc.com/allora_testnet/",
+    "maxRetries": 1,
+    "delay": 1,
+    "submitTx": false
+  },
+  "worker": [
+    {
+      "topicId": 1,
+      "loopSeconds": 5,
+      "InferenceEntrypointName": "api-worker-reputer",
+      "parameters": {
+        "InferenceEndpoint": "http://5.104.84.138:8000/inference/{Token}",
+        "Token": "ETH"
+      }
+    },
+    {
+      "topicId": 2,
+      "loopSeconds": 60,
+      "InferenceEntrypointName": "api-worker-reputer",
+      "parameters": {
+        "InferenceEndpoint": "http://5.104.84.138:8000/inference/{Token}",
+        "Token": "ETH"
+      }
+    },
+    {
+      "topicId": 3,
+      "loopSeconds": 5,
+      "InferenceEntrypointName": "api-worker-reputer",
+      "parameters": {
+        "InferenceEndpoint": "http://5.104.84.138:8000/inference/{Token}",
+        "Token": "BTC"
+      }
+    },
+    {
+      "topicId": 4,
+      "loopSeconds": 60,
+      "InferenceEntrypointName": "api-worker-reputer",
+      "parameters": {
+        "InferenceEndpoint": "http://5.104.84.138:8000/inference/{Token}",
+        "Token": "BTC"
+      }
+    },
+    {
+      "topicId": 5,
+      "loopSeconds": 5,
+      "InferenceEntrypointName": "api-worker-reputer",
+      "parameters": {
+        "InferenceEndpoint": "http://5.104.84.138:8000/inference/{Token}",
+        "Token": "SOL"
+      }
+    },
+    {
+      "topicId": 6,
+      "loopSeconds": 60,
+      "InferenceEntrypointName": "api-worker-reputer",
+      "parameters": {
+        "InferenceEndpoint": "http://5.104.84.138:8000/inference/{Token}",
+        "Token": "SOL"
+      }
+    },
+    {
+      "topicId": 7,
+      "loopSeconds": 10,
+      "InferenceEntrypointName": "api-worker-reputer",
+      "parameters": {
+        "InferenceEndpoint": "http://5.104.84.138:8000/inference/{Token}",
+        "Token": "ETH"
+      }
+    },
+    {
+      "topicId": 8,
+      "loopSeconds": 10,
+      "InferenceEntrypointName": "api-worker-reputer",
+      "parameters": {
+        "InferenceEndpoint": "http://5.104.84.138:8000/inference/{Token}",
+        "Token": "BNB"
+      }
+    },
+    {
+      "topicId": 9,
+      "loopSeconds": 10,
+      "InferenceEntrypointName": "api-worker-reputer",
+      "parameters": {
+        "InferenceEndpoint": "http://5.104.84.138:8000/inference/{Token}",
+        "Token": "ARB"
+      }
+    },
+    {
+      "topicId": 10,
+      "loopSeconds": 10,
+      "InferenceEntrypointName": "api-worker-reputer",
+      "parameters": {
+        "InferenceEndpoint": "http://5.104.84.138:8000/inference/{Token}",
+        "Token": "MEME"
+      }
+    }
+  ]
+}

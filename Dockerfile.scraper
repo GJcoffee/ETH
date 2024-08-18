@@ -1,0 +1,14 @@
+# Use an official Python runtime as a parent image
+FROM amd64/python:3.9-buster
+
+# Set the working directory in the container
+WORKDIR /scraper
+
+# Copy the current directory contents into the container at /scraper
+COPY . /scraper
+
+# Install any needed packages
+RUN pip install --no-cache-dir redis tls-client typing_extensions
+
+# Run the scraper script
+CMD ["python", "scraper.py"]
