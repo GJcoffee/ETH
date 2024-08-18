@@ -1,6 +1,5 @@
 import random
 import time
-
 import redis
 import tls_client
 
@@ -20,114 +19,45 @@ headers = {
     'sec-fetch-site': 'same-site',
     'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
 }
-"""https://cn.cointelegraph.com/ethereum-price?fiatSymbol=USD"""
-while True:
+
+
+def update_data(redis_conn, key, value):
+    redis_conn.lpush(key, value)
+    redis_conn.ltrim(key, 0, 4)  # 保留最近的5条记录
+
+
+def fetch_and_store_data(redis_conn, crypto_symbol, key):
+    http = tls_client.Session(random_tls_extension_order=True)
+    params = {
+        'cryptoSymbol': crypto_symbol,
+        'fiatSymbol': 'USD',
+        'amount': '1',
+        'reversed': 'false',
+    }
+    response = http.get('https://ticker-api.cointelegraph.com/converter/rate', params=params, headers=headers)
+    value = float(response.json()['rate'])
+    update_data(redis_conn, key, value)
+    data = redis_conn.lrange(key, 0, 4)
+    print(f'{crypto_symbol}:', data)
+    time.sleep(5)
+
+
+def main_loop():
     try:
-        # with redis.Redis(host='192.168.20.250', port=6379, db=5) as redis_conn:
         with redis.Redis(host='redis', port=6379, db=5) as redis_conn:
-            http = tls_client.Session(random_tls_extension_order=True)
-            """ETH"""
-            params = {
-                'cryptoSymbol': 'ETH',
-                'fiatSymbol': 'USD',
-                'amount': '1',
-                'reversed': 'false',
-            }
-            response = http.get('https://ticker-api.cointelegraph.com/converter/rate', params=params, headers=headers)
-            value = response.json()['rate']
-            data_range = (float(value) + 2, float(value) - 2)
-            print(data_range)
-            # 将范围存入redis
-            redis_conn.set('ETH_range', str(data_range))
-            data = eval(str(redis_conn.get('data_range')).replace("b'", '').replace("'", ''))
-            print('ETH:', data)
-            time.sleep(5)
+        # with redis.Redis(host='192.168.20.250', port=6379, db=5) as redis_conn:
+            while True:
+                fetch_and_store_data(redis_conn, 'ETH', 'ETH_values')
+                fetch_and_store_data(redis_conn, 'BTC', 'BTC_values')
+                fetch_and_store_data(redis_conn, 'BNB', 'BNB_values')
+                fetch_and_store_data(redis_conn, 'SOL', 'SOL_values')
+                fetch_and_store_data(redis_conn, 'ARB', 'ARB_values')
+                fetch_and_store_data(redis_conn, 'MEME', 'MEME_values')
 
-            """BTC"""
-            params = {
-                'cryptoSymbol': 'BTC',
-                'fiatSymbol': 'USD',
-                'amount': '1',
-                'reversed': 'false',
-            }
-            response = http.get('https://ticker-api.cointelegraph.com/converter/rate', params=params, headers=headers)
-            value = response.json()['rate']
-            data_range = (float(value) + 2, float(value) - 2)
-            print(data_range)
-            # 将范围存入redis
-            redis_conn.set('BTC_range', str(data_range))
-            data = eval(str(redis_conn.get('BTC_range')).replace("b'", '').replace("'", ''))
-            print('BTC:', data)
-            time.sleep(5)
-
-            """BNB"""
-            params = {
-                'cryptoSymbol': 'BNB',
-                'fiatSymbol': 'USD',
-                'amount': '1',
-                'reversed': 'false',
-            }
-            response = http.get('https://ticker-api.cointelegraph.com/converter/rate', params=params, headers=headers)
-            value = response.json()['rate']
-            data_range = (float(value) + 1, float(value) - 1)
-            print(data_range)
-            # 将范围存入redis
-            redis_conn.set('BNB_range', str(data_range))
-            data = eval(str(redis_conn.get('BNB_range')).replace("b'", '').replace("'", ''))
-            print('BNB:', data)
-            time.sleep(5)
-
-            """SOL"""
-            params = {
-                'cryptoSymbol': 'SOL',
-                'fiatSymbol': 'USD',
-                'amount': '1',
-                'reversed': 'false',
-            }
-            response = http.get('https://ticker-api.cointelegraph.com/converter/rate', params=params, headers=headers)
-            value = response.json()['rate']
-            data_range = (float(value) + 1, float(value) - 1)
-            print(data_range)
-            # 将范围存入redis
-            redis_conn.set('SOL_range', str(data_range))
-            data = eval(str(redis_conn.get('SOL_range')).replace("b'", '').replace("'", ''))
-            print('SOL:', data)
-            time.sleep(5)
-
-            """ARB"""
-            params = {
-                'cryptoSymbol': 'ARB',
-                'fiatSymbol': 'USD',
-                'amount': '1',
-                'reversed': 'false',
-            }
-            response = http.get('https://ticker-api.cointelegraph.com/converter/rate', params=params, headers=headers)
-            value = response.json()['rate']
-            data_range = (float(value) + 0.01, float(value) - 0.01)
-            print(data_range)
-            # 将范围存入redis
-            redis_conn.set('ARB_range', str(data_range))
-            data = eval(str(redis_conn.get('ARB_range')).replace("b'", '').replace("'", ''))
-            print('ARB:', data)
-            time.sleep(5)
-
-            """MEME"""
-            params = {
-                'cryptoSymbol': 'MEME',
-                'fiatSymbol': 'USD',
-                'amount': '1',
-                'reversed': 'false',
-            }
-            response = http.get('https://ticker-api.cointelegraph.com/converter/rate', params=params, headers=headers)
-            value = response.json()['rate']
-            data_range = (float(value) + 0.0001, float(value) - 0.0001)
-            print(data_range)
-            # 将范围存入redis
-            redis_conn.set('MEME_range', str(data_range))
-            data = eval(str(redis_conn.get('MEME_range')).replace("b'", '').replace("'", ''))
-            print('MEME:', data)
-
-            time.sleep(3 * 60)
-
+                time.sleep(1 * 60)  # 等待1分钟后再次循环
     except Exception as e:
         print(e)
+
+
+if __name__ == "__main__":
+    main_loop()

@@ -8,6 +8,7 @@ app = Flask(__name__)
 
 # 创建Redis连接池
 pool = ConnectionPool(host='redis', port=6379, db=5)
+# pool = ConnectionPool(host='192.168.20.250', port=6379, db=5)
 redis_conn = redis.Redis(connection_pool=pool)
 
 # 锁机制
@@ -22,10 +23,18 @@ class NodeValue:
 
 def get_data_from_redis(token):
     with lock:
-        data = redis_conn.get(f'{token}_range')
+        data = redis_conn.lrange(f'{token}_values', 0, 4)  # 获取最新的5条记录
         if data:
-            data = eval(data.decode('utf-8'))
+            data = [float(item.decode('utf-8')) for item in data]
         return data
+
+
+def calculate_value(data):
+    if data:
+        min_value = min(data)
+        max_value = max(data)
+        return round(random.uniform(min_value, max_value), 12)
+    return None
 
 
 @app.route('/', methods=['GET'])
@@ -36,8 +45,8 @@ def health():
 @app.route('/inference/<token>', methods=['GET'])
 def get_inference(token):
     data = get_data_from_redis(token)
-    if data:
-        value = round(random.uniform(data[0], data[-1]), 12)
+    value = calculate_value(data)
+    if value is not None:
         return str(value)
     return "Error: No data available", 500
 
@@ -47,9 +56,9 @@ def get_forecast():
     data = get_data_from_redis(token)
     if data:
         node_values = [
-            NodeValue("Worker1", str(round(random.uniform(data[0], data[-1]), 12))),
-            NodeValue("Worker2", str(round(random.uniform(data[0], data[-1]), 12))),
-            NodeValue("Worker3", str(round(random.uniform(data[0], data[-1]), 12))),
+            NodeValue("Worker1", str(calculate_value(data))),
+            NodeValue("Worker2", str(calculate_value(data))),
+            NodeValue("Worker3", str(calculate_value(data))),
         ]
         return jsonify([nv.__dict__ for nv in node_values])
     return "Error: No data available", 500
@@ -58,8 +67,8 @@ def get_forecast():
 @app.route('/truth/<token>/<blockheight>', methods=['GET'])
 def get_truth(token, blockheight):
     data = get_data_from_redis(token)
-    if data:
-        value = round(random.uniform(data[0], data[-1]), 12)
+    value = calculate_value(data)
+    if value is not None:
         return str(value)
     return "Error: No data available", 500
 

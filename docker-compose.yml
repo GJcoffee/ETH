@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile.api
     ports:
-      - "6000:6000"
+      - "8000:6000"
     depends_on:
       - redis
 
