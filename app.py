@@ -23,7 +23,7 @@ class NodeValue:
 
 def get_data_from_redis(token):
     with lock:
-        data = redis_conn.lrange(f'{token}_values', 0, 4)  # 获取最新的5条记录
+        data = redis_conn.lrange(f'{token}_values', 0, 2)  # 获取最新的5条记录
         if data:
             data = [float(item.decode('utf-8')) for item in data]
         return data
@@ -33,7 +33,8 @@ def calculate_value(data):
     if data:
         min_value = min(data)
         max_value = max(data)
-        return round(random.uniform(min_value, max_value), 12)
+        range_ = random.randint(2, 12)
+        return round(random.uniform(min_value, max_value), range_)
     return None
 
 
