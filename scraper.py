@@ -39,7 +39,7 @@ TICKER_ENDPOINT = "/api/v3/ticker/price"
 SYMBOLS = '["ETHUSDT","BTCUSDT","BNBUSDT","SOLUSDT","ARBUSDT","MEMEUSDT"]'
 
 # Redis连接配置
-REDIS_HOST = '192.168.20.250'  # 修改为你的Redis服务器地址
+REDIS_HOST = 'redis'  # 修改为你的Redis服务器地址
 REDIS_PORT = 6379
 REDIS_DB = 5
 
