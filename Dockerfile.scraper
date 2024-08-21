@@ -8,7 +8,7 @@ WORKDIR /scraper
 COPY . /scraper
 
 # Install any needed packages
-RUN pip install --no-cache-dir redis tls-client typing_extensions loguru
+RUN pip install --no-cache-dir redis tls-client typing_extensions loguru requests
 
 # Run the scraper script
 CMD ["python", "scraper.py"]
