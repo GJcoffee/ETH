@@ -75,7 +75,4 @@ def get_truth(token, blockheight):
 
 
 if __name__ == '__main__':
-    from gevent.pywsgi import WSGIServer
-
-    http_server = WSGIServer(('0.0.0.0', 6000), app)
-    http_server.serve_forever()
+    app.run(debug=False, host='0.0.0.0', port=6000)
