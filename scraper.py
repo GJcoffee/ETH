@@ -27,7 +27,7 @@ def fetch_and_store_data(redis_conn):
     if response.status_code == 200:
         prices = response.json()
         for price_info in prices:
-            symbol = price_info['symbol']
+            symbol = price_info['symbol'].replace('USDT', '')
             price = float(price_info['price'])
             key = f"{symbol}_values"
             update_data(redis_conn, key, price)
