@@ -7,8 +7,8 @@ from threading import Lock
 app = Flask(__name__)
 
 # 创建Redis连接池
-pool = ConnectionPool(host='redis', port=6379, db=5)
-# pool = ConnectionPool(host='192.168.20.250', port=6379, db=5)
+# pool = ConnectionPool(host='redis', port=6379, db=5)
+pool = ConnectionPool(host='192.168.20.250', port=6379, db=5)
 redis_conn = redis.Redis(connection_pool=pool)
 
 # 锁机制
@@ -25,6 +25,7 @@ def get_data_from_redis(token):
     with lock:
         range_ = random.randint(50, 100)
         data = redis_conn.lrange(f'{token}_values', 0, range_)  # 获取最新的5条记录
+        # print(data)
         if data:
             data = [float(item.decode('utf-8')) for item in data]
         return data
@@ -35,6 +36,7 @@ def calculate_value(data):
         min_value = min(data)
         max_value = max(data)
         range_ = random.randint(2, 12)
+        # print("max:", max_value, "min:", min_value)
         return round(random.uniform(min_value, max_value), range_)
     return None
 
