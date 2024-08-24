@@ -64,7 +64,7 @@ def fetch_and_store_data(redis_conn):
             price = float(price_info['price'])
             key = f"{symbol}_values"
             update_data(redis_conn, key, price)
-            data = redis_conn.lrange(key, 0, 2)
+            data = redis_conn.lrange(key)
             logger.info(f'{symbol}:{data}')
     else:
         logger.error(f"Failed to fetch prices. Status Code: {response.status_code}")
