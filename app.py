@@ -7,8 +7,8 @@ from threading import Lock
 app = Flask(__name__)
 
 # 创建Redis连接池
-# pool = ConnectionPool(host='redis', port=6379, db=5)
-pool = ConnectionPool(host='192.168.20.250', port=6379, db=5)
+pool = ConnectionPool(host='redis', port=6379, db=5)
+# pool = ConnectionPool(host='192.168.20.250', port=6379, db=5)
 redis_conn = redis.Redis(connection_pool=pool)
 
 # 锁机制
