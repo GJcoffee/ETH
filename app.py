@@ -35,9 +35,8 @@ def calculate_value(data):
     if data:
         min_value = min(data)
         max_value = max(data)
-        range_ = random.randint(2, 12)
         # print("max:", max_value, "min:", min_value)
-        return round(random.uniform(min_value, max_value), range_)
+        return round(random.uniform(min_value, max_value), 12)
     return None
 
 
